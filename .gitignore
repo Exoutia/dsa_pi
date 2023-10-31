@@ -197,4 +197,11 @@ tags
 # Persistent undo
 [._]*.un~
 
+# for my simple scripts and notebook
+*.ipynb
+/misc_notebook
+/misc_notebook
+
+
+
 # End of https://www.toptal.com/developers/gitignore/api/python,vim
