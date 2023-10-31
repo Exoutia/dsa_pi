@@ -39,7 +39,11 @@ def get_all_problems(
 ):
     query = db.query(models.Problem)
     if search:
-        problems = query.limit(limit).offset(skip).contains(search)
+        problems = (
+            query.filter(models.Problem.title.contains(search))
+            .limit(limit)
+            .offset(skip)
+        )
         if not problems:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="No Problem Found"
