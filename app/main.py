@@ -10,7 +10,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "This is problems"}
+    return {"message": "Hello from Dsa_pi"}
 
 
 @app.post("/problems", response_model=schemas.Problem)
@@ -32,15 +32,31 @@ def create_problem(
 
 @app.get("/problems", response_model=List[schemas.Problem])
 def get_all_problems(
-    db: Session = Depends(database.get_db), limit: int = 10, skip: int = 0
+    db: Session = Depends(database.get_db),
+    limit: int = 10,
+    skip: int = 0,
+    search: str | None = None,
 ):
     query = db.query(models.Problem)
-    problems = query.limit(limit).offset(skip).all()
-    if not problems:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="No Problem Found"
-        )
+    if search:
+        problems = query.limit(limit).offset(skip).contains(search)
+        if not problems:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="No Problem Found"
+            )
     return problems
+
+
+@app.get("/problems/{problem_id}", response_model=schemas.Problem)
+def get_problem(problem_id: int, db: Session = Depends(database.get_db)):
+    query = db.query(models.Problem).filter(models.Problem.id == problem_id)
+    problem = query.first()
+    if problem is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Problem with {problem_id} is not found.",
+        )
+    return problem
 
 
 @app.put(
