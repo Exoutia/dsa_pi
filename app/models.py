@@ -7,8 +7,8 @@ class Problem(Base):
     __tablename__ = "problems"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String)
+    title = Column(String, nullable=False)
     description = Column(String)
     link = Column(String)
     solution_link = Column(String)
-
+    difficulty = Column(String)
