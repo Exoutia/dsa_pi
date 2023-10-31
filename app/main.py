@@ -42,7 +42,8 @@ def get_all_problems(
         problems = (
             query.filter(models.Problem.title.contains(search))
             .limit(limit)
-            .offset(skip).all()
+            .offset(skip)
+            .all()
         )
     else:
         problems = query.limit(limit).offset(skip).all()
