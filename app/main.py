@@ -99,3 +99,16 @@ def delete_problem(problem_id: int, db: Session = Depends(database.get_db)):
     query.delete(synchronize_session=False)
     db.commit()
     return
+
+
+@app.get("/categories", response_model=List[schemas.Category])
+def get_categories(db: Session = Depends(database.get_db)):
+    query = db.query(models.Category)
+    categories = query.all()
+    if not categories:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="No Category Found"
+        )
+    return categories
+
+
